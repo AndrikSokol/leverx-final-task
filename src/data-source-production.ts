@@ -8,9 +8,9 @@ import { Vinyl } from './vinyl/entities/vinyl.entities';
 const dataSource = new DataSource({
   type: 'postgres',
   host: 'dpg-core6l21hbls73f4n53g-a',
-  database: 'hwfinal_ipqk_user',
+  database: 'hwfinal_ipqk',
   port: 5432,
-  username: 'hwfinal_user',
+  username: 'hwfinal_ipqk_user',
   password: 'elHykGvHgnpqZ54PzCoF8cvf2KMAoJYW',
   synchronize: false,
   entities: [User, Profile, Review, Order, Vinyl],
