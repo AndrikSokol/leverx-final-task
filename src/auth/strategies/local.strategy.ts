@@ -24,7 +24,6 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
       if (!user) {
         throw new NotFoundException();
       }
-      console.log(user);
       if (!(await bcrypt.compare(password, user.passwordHash))) {
         throw new UnauthorizedException();
       }

@@ -7,11 +7,11 @@ import { Vinyl } from './vinyl/entities/vinyl.entities';
 
 const dataSource = new DataSource({
   type: 'postgres',
-  host: 'dpg-core6l21hbls73f4n53g-a',
-  database: 'hwfinal_ipqk',
+  host: 'dpg-corfama0si5c739g5pi0-a',
+  database: 'hwfinal_c1ah',
   port: 5432,
-  username: 'hwfinal_ipqk_user',
-  password: 'elHykGvHgnpqZ54PzCoF8cvf2KMAoJYW',
+  username: 'hwfinal_c1ah_user',
+  password: 'awnPExwC5nmtNK1U1gRb8Ay6fQrK55wg',
   synchronize: false,
   entities: [User, Profile, Review, Order, Vinyl],
   migrations: ['src/migrations/*{.ts,.js}'],
