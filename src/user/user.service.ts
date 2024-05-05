@@ -13,13 +13,22 @@ export class UserService {
   ) {}
 
   async create(dto: RegisterAuthDto | GoogleAuthDto) {
-    const newUser = new User({
-      ...dto,
-      email: dto.email.toLocaleLowerCase(),
-      ...(dto instanceof RegisterAuthDto && { passwordHash: dto.password }),
-    });
+    if (dto instanceof RegisterAuthDto) {
+      const newUser = new User({
+        ...dto,
+        email: dto.email.toLocaleLowerCase(),
+        passwordHash: dto.password,
+      });
+      return await this.userRepository.save(newUser);
+    }
 
-    return await this.userRepository.save(newUser);
+    if (dto instanceof GoogleAuthDto) {
+      const newUser = new User({
+        ...dto,
+        email: dto.email.toLocaleLowerCase(),
+      });
+      return await this.userRepository.save(newUser);
+    }
   }
 
   async findByEmail(email: string): Promise<User> {
