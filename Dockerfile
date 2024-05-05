@@ -4,6 +4,6 @@ ADD package.json package.json
 RUN npm install
 ADD . .
 RUN npm run build
-RUN npm run migration:run
+RUN npm run migration:run:prod
 RUN npm prune --production
 CMD ["mode","./dist/main.js"]
