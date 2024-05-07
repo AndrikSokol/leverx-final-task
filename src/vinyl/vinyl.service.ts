@@ -148,12 +148,12 @@ LIMIT ${pageOptionsDto.take} OFFSET ${pageOptionsDto.skip};
   }
 
   async createFromDiscogs(query: DiscogsQueryDto) {
-    const vinyl = await this.discogsService.create(query);
+    const vinyl = await this.discogsService.findVinyl(query);
     return await this.create(vinyl);
   }
 
   async createFromDiscogsById(releaseId: number) {
-    const vinyl = await this.discogsService.createByReleaseId(releaseId);
+    const vinyl = await this.discogsService.findByReleaseId(releaseId);
     return await this.create(vinyl);
   }
 }

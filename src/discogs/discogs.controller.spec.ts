@@ -25,15 +25,15 @@ describe('DiscogsController', () => {
     service = module.get<DiscogsService>('DISCOGS_SERVICE');
   });
 
-  describe('findVinyl', () => {
-    it('should return vinyl records from Discogs', async () => {
+  describe('findVinyls', () => {
+    it('should return vinyls records from Discogs', async () => {
       const queryDto: DiscogsQueryDto = { realese_title: ' nirvana' };
       const pageOptionsDto: PageOptionsDto = { page: 1, skip: 0, take: 10 };
       const expectedResponse = [{ realese_title: ' nirvana' }];
 
-      jest.spyOn(service, 'find').mockResolvedValue(expectedResponse);
+      jest.spyOn(service, 'findVinyls').mockResolvedValue(expectedResponse);
 
-      const result = await controller.findVinyl(queryDto, pageOptionsDto);
+      const result = await controller.findVinyls(queryDto, pageOptionsDto);
 
       expect(result).toEqual(expectedResponse);
     });
