@@ -10,6 +10,7 @@ import * as path from 'path';
     ServeStaticModule.forRoot({
       rootPath: path.join(appPath, 'uploads'),
       serveRoot: '/static',
+      exclude: ['/api/(.*)'],
     }),
   ],
   controllers: [FileController],

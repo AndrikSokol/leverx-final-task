@@ -27,6 +27,7 @@ export class ReviewService {
         id: true,
         comment: true,
         score: true,
+        vinylId: true,
         user: { firstName: true, lastName: true, email: true },
       },
       skip: pageOptionsDto.skip,
