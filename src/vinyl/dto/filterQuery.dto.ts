@@ -3,12 +3,12 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class FilterQueryDto {
-  @ApiProperty({ example: 'vinyl', nullable: true })
+  @ApiProperty({ example: 'vinyl', nullable: true, required: false })
   @IsOptional()
   @IsString()
   name?: string;
 
-  @ApiProperty({ example: 'Andrei', nullable: true })
+  @ApiProperty({ example: 'Andrei', nullable: true, required: false })
   @IsOptional()
   @IsString()
   authorName?: string;
