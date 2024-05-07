@@ -46,6 +46,7 @@ describe('VinylController', () => {
             update: jest.fn(),
             delete: jest.fn(),
             getVinylByLink: jest.fn(),
+            createFromDiscogs: jest.fn(),
           },
         },
       ],
@@ -98,7 +99,7 @@ describe('VinylController', () => {
         price: 5,
       };
 
-      jest.spyOn(service, 'create').mockResolvedValue(mockVinyls[0]); // Assuming it returns the created vinyl
+      jest.spyOn(service, 'create').mockResolvedValue(mockVinyls[0]);
 
       const result = await controller.create(vinylDto);
 
@@ -117,7 +118,7 @@ describe('VinylController', () => {
         price: 5,
       };
 
-      jest.spyOn(service, 'update').mockResolvedValue(mockVinyls[0]); // Assuming it returns the updated vinyl
+      jest.spyOn(service, 'update').mockResolvedValue(mockVinyls[0]);
 
       const result = await controller.update(id, vinylDto);
 
@@ -129,7 +130,7 @@ describe('VinylController', () => {
     it('should delete a vinyl', async () => {
       const id = 1;
 
-      jest.spyOn(service, 'delete').mockResolvedValue(null); // Assuming it returns null upon successful deletion
+      jest.spyOn(service, 'delete').mockResolvedValue(null);
 
       const result = await controller.delete(id);
 
@@ -141,7 +142,7 @@ describe('VinylController', () => {
     it('should return vinyl by link', async () => {
       const link = 'some-link';
 
-      jest.spyOn(service, 'getVinylByLink').mockResolvedValue(mockVinyls[0]); // Assuming it returns the vinyl
+      jest.spyOn(service, 'getVinylByLink').mockResolvedValue(mockVinyls[0]);
 
       const result = await controller.getVinylByLink(link);
 

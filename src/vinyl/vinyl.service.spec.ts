@@ -11,6 +11,7 @@ import { FilterQueryDto } from './dto/filterQuery.dto';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { VinylDto } from './dto/vinyl.dto';
 import * as vinylUtils from '@/utils/isExistsFIle';
+import { DiscogsService } from '@/discogs/discogs.service';
 
 const mockVinyls = [
   {
@@ -35,6 +36,7 @@ describe('VinylService', () => {
   let service: VinylService;
   let vinylRepository: Repository<Vinyl>;
   let entityManager: EntityManager;
+  let discogsService: DiscogsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -48,16 +50,22 @@ describe('VinylService', () => {
           provide: EntityManager,
           useClass: EntityManager,
         },
+        { provide: 'DISCOGS_SERVICE', useValue: { create: jest.fn() } },
       ],
     }).compile();
 
     service = module.get<VinylService>(VinylService);
     vinylRepository = module.get<Repository<Vinyl>>(getRepositoryToken(Vinyl));
     entityManager = module.get<EntityManager>(EntityManager);
+    discogsService = module.get<DiscogsService>('DISCOGS_SERVICE');
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  it('should be defined', () => {
+    expect(discogsService).toBeDefined();
   });
 
   describe('getVinyls', () => {

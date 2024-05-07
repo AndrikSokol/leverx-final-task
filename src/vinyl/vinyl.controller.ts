@@ -28,6 +28,7 @@ import {
 import { PageOptionsDto } from '@/dto/pageOptions.dto';
 import { FilterQueryDto } from './dto/filterQuery.dto';
 import { UserRole } from '@/enum/userRole.enum';
+import { DiscogsQueryDto } from './dto/discogsQuery';
 
 @ApiTags('vinyl')
 @Controller('vinyl')
@@ -93,5 +94,29 @@ export class VinylController {
   @Get(':link')
   async getVinylByLink(@Param('link') link: string) {
     return await this.vinylService.getVinylByLink(link);
+  }
+
+  @ApiOperation({ summary: 'create vinyl from discogs api' })
+  @ApiCookieAuth('access_token')
+  @UseGuards(RolesGuard)
+  @Roles([UserRole.Admin])
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(new ValidationPipe())
+  @Post('discogs')
+  async createFromDiscogs(@Query() query: DiscogsQueryDto) {
+    return await this.vinylService.createFromDiscogs(query);
+  }
+
+  @ApiOperation({ summary: 'create vinyl from discogs api by release id' })
+  @ApiCookieAuth('access_token')
+  @UseGuards(RolesGuard)
+  @Roles([UserRole.Admin])
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(new ValidationPipe())
+  @Post('discogs/:releaseId')
+  async createFromDiscogsById(
+    @Param('releaseId', ParseIntPipe) releaseId: number,
+  ) {
+    return await this.vinylService.createFromDiscogsById(releaseId);
   }
 }

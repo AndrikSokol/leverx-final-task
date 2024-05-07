@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -17,6 +18,8 @@ import {
   VINYL_ALREADY_EXISTS_WITH_SAME_NAME,
   VINYL_NOT_FOUND,
 } from '@/constants/response-messages';
+import { DiscogsQueryDto } from './dto/discogsQuery';
+import { DiscogsService } from '@/discogs/discogs.service';
 
 @Injectable()
 export class VinylService {
@@ -24,6 +27,7 @@ export class VinylService {
     @InjectRepository(Vinyl)
     private readonly vinylRepository: Repository<Vinyl>,
     private readonly entityManager: EntityManager,
+    @Inject('DISCOGS_SERVICE') private readonly discogsService: DiscogsService,
   ) {}
 
   async getVinyls(pageOptionsDto: PageOptionsDto): Promise<PageDto<Vinyl[]>> {
@@ -141,5 +145,15 @@ LIMIT ${pageOptionsDto.take} OFFSET ${pageOptionsDto.skip};
 
   async getVinylByLink(link: string) {
     return await this.vinylRepository.findOne({ where: { link } });
+  }
+
+  async createFromDiscogs(query: DiscogsQueryDto) {
+    const vinyl = await this.discogsService.create(query);
+    return await this.create(vinyl);
+  }
+
+  async createFromDiscogsById(releaseId: number) {
+    const vinyl = await this.discogsService.createByReleaseId(releaseId);
+    return await this.create(vinyl);
   }
 }

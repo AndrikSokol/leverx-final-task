@@ -14,5 +14,6 @@ import * as path from 'path';
   ],
   controllers: [FileController],
   providers: [{ useClass: FileService, provide: 'FILE_SERVICE' }],
+  exports: [{ useClass: FileService, provide: 'FILE_SERVICE' }],
 })
 export class FileModule {}

@@ -13,6 +13,7 @@ import { TelegramModule } from './telegram/telegram.module';
 import { getTelegramConfig } from './configs/telegram.config';
 import { VinylModule } from './vinyl/vinyl.module';
 import { TelegramSubscriber } from './subscribers/TelegramSubscriber';
+import { DiscogsModule } from './discogs/discogs.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { TelegramSubscriber } from './subscribers/TelegramSubscriber';
       inject: [ConfigService],
       useFactory: getTelegramConfig,
     }),
+    DiscogsModule,
   ],
   controllers: [],
   providers: [TelegramSubscriber],
