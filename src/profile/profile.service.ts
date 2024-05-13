@@ -64,12 +64,18 @@ export class ProfileService {
       throw new NotFoundException(AVATAR_NOT_FOUND);
     }
 
-    await this.userService.save({ ...profile.user, ...dto });
-
-    return await this.profileRepository.save({
-      id: profile.id,
+    await this.userService.save({
+      id: profile.user.id,
+      ...profile.user,
       ...dto,
     });
+
+    await this.profileRepository.update(
+      { id: profile.id },
+      { avatar: dto.avatar, birthdate: dto.birthdate },
+    );
+
+    return await this.profileRepository.findOneBy({ id: profile.id });
   }
 
   async delete(userId: number): Promise<void> {
