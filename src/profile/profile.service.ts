@@ -65,9 +65,10 @@ export class ProfileService {
     }
 
     await this.userService.save({
-      id: profile.user.id,
+      id: userId,
       ...profile.user,
-      ...dto,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
     });
 
     await this.profileRepository.update(
