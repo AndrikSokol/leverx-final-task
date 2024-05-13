@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -13,12 +14,15 @@ import {
   PROFILE_ALREADY_EXISTS,
   PROFILE_NOT_FOUND,
 } from '@/constants/response-messages';
+import { UserService } from '@/user/user.service';
 
 @Injectable()
 export class ProfileService {
   constructor(
     @InjectRepository(Profile)
     private readonly profileRepository: Repository<Profile>,
+    @Inject('USER_SERVICE')
+    private readonly userService: UserService,
   ) {}
 
   async create(userId: number) {
@@ -47,7 +51,10 @@ export class ProfileService {
   }
 
   async update(dto: UpdateProfileDto, userId: number) {
-    const profile = await this.profileRepository.findOne({ where: { userId } });
+    const profile = await this.profileRepository.findOne({
+      where: { userId },
+      relations: { user: true },
+    });
 
     if (!profile) {
       throw new NotFoundException(PROFILE_NOT_FOUND);
@@ -57,10 +64,19 @@ export class ProfileService {
       throw new NotFoundException(AVATAR_NOT_FOUND);
     }
 
-    return await this.profileRepository.save({
-      id: profile.id,
-      ...dto,
+    await this.userService.save({
+      id: userId,
+      ...profile.user,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
     });
+
+    await this.profileRepository.update(
+      { id: profile.id },
+      { avatar: dto.avatar, birthdate: dto.birthdate },
+    );
+
+    return await this.profileRepository.findOneBy({ id: profile.id });
   }
 
   async delete(userId: number): Promise<void> {

@@ -33,10 +33,10 @@ export class Vinyl {
   @Column({ nullable: true })
   link: string;
 
-  @OneToMany(() => Review, (review) => review.vinyl)
+  @OneToMany(() => Review, (review) => review.vinyl, { onDelete: 'CASCADE' })
   reviews: Review[];
 
-  @ManyToMany(() => Order, (order) => order.vinyls)
+  @ManyToMany(() => Order, (order) => order.vinyls, { onDelete: 'SET NULL' })
   orders: Order[];
 
   @BeforeInsert()
