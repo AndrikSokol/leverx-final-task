@@ -41,6 +41,12 @@ export class ProfileService {
     const profile = await this.profileRepository.findOne({
       where: { userId },
       relations: { user: true },
+      select: {
+        id: true,
+        avatar: true,
+        birthdate: true,
+        user: { id: true, firstName: true, lastName: true },
+      },
     });
 
     if (!profile) {
@@ -76,7 +82,16 @@ export class ProfileService {
       { avatar: dto.avatar, birthdate: dto.birthdate },
     );
 
-    return await this.profileRepository.findOneBy({ id: profile.id });
+    return await this.profileRepository.findOne({
+      where: { id: profile.id },
+      relations: { user: true },
+      select: {
+        id: true,
+        avatar: true,
+        birthdate: true,
+        user: { id: true, firstName: true, lastName: true },
+      },
+    });
   }
 
   async delete(userId: number): Promise<void> {
