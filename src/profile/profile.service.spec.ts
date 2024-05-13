@@ -7,16 +7,21 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 
 import * as vinylUtils from '@/utils/isExistsFIle';
+import { UserService } from '@/user/user.service';
 
 const mockProfile = new Profile({
   id: 1,
   userId: 1,
 });
 
+const mockUserService = {
+  save: jest.fn(),
+};
+
 describe('ProfileService', () => {
   let service: ProfileService;
   let profileRepository: Repository<Profile>;
-
+  let userService: UserService;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -25,6 +30,10 @@ describe('ProfileService', () => {
           provide: getRepositoryToken(Profile),
           useClass: Repository,
         },
+        {
+          provide: 'USER_SERVICE',
+          useValue: mockUserService,
+        },
       ],
     }).compile();
 
@@ -32,10 +41,15 @@ describe('ProfileService', () => {
     profileRepository = module.get<Repository<Profile>>(
       getRepositoryToken(Profile),
     );
+    userService = module.get<UserService>('USER_SERVICE');
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  it('should be defined userService', () => {
+    expect(userService).toBeDefined();
   });
 
   describe('create', () => {
