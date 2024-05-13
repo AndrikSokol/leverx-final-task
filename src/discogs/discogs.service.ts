@@ -13,6 +13,8 @@ import {
 import { AxiosError } from 'axios';
 import { randomInt } from 'crypto';
 import { catchError, firstValueFrom } from 'rxjs';
+import { API_URL } from './dicsogs.constants';
+import { DiscogsResponse } from './types/discogsResponse.type';
 
 @Injectable()
 export class DiscogsService {
@@ -21,11 +23,11 @@ export class DiscogsService {
     private readonly httpService: HttpService,
   ) {}
 
-  async create(query: DiscogsQueryDto) {
+  async findVinyl(query: DiscogsQueryDto) {
     const TYPE = 'release';
     const { data } = await firstValueFrom(
       this.httpService
-        .get(`https://api.discogs.com/database/search`, {
+        .get<DiscogsResponse>(API_URL.databaseSeach, {
           params: {
             type: TYPE,
             release_title: query.realese_title,
@@ -43,36 +45,15 @@ export class DiscogsService {
     if (!vinyl) {
       throw new NotFoundException(VINYL_NOT_FOUND);
     }
-    const resource_url = vinyl.resource_url;
 
-    const { data: foundVinyl } = await firstValueFrom(
-      this.httpService.get(resource_url).pipe(
-        catchError((error: AxiosError) => {
-          throw new Error(error.message);
-        }),
-      ),
-    );
-
-    const newFile = await this.fileService.saveFileByLink(
-      foundVinyl.images[0].uri,
-    );
-
-    const dto: VinylDto = {
-      name: foundVinyl.title,
-      description: foundVinyl.notes || 'no content',
-      image: newFile.url,
-      authorName: foundVinyl.artists_sort,
-      price: randomInt(10),
-    };
-
-    return dto;
+    return await this.findByReleaseId(vinyl.id);
   }
 
-  async find(query: DiscogsQueryDto, pageOptionsDto: PageOptionsDto) {
+  async findVinyls(query: DiscogsQueryDto, pageOptionsDto: PageOptionsDto) {
     const TYPE = 'release';
     const { data } = await firstValueFrom(
       this.httpService
-        .get(`https://api.discogs.com/database/search`, {
+        .get<DiscogsResponse>(API_URL.databaseSeach, {
           params: {
             type: TYPE,
             release_title: query.realese_title,
@@ -91,26 +72,29 @@ export class DiscogsService {
     return data.results;
   }
 
-  async createByReleaseId(releaseId: number) {
-    const { data } = await firstValueFrom(
-      this.httpService
-        .get(`https://api.discogs.com/releases/${releaseId}`)
-        .pipe(
-          catchError((error: AxiosError) => {
-            if (error.status == 404) {
-              throw new BadRequestException(VINYL_NOT_FOUND);
-            } else {
-              throw new Error(error.message);
-            }
-          }),
-        ),
+  async findByReleaseId(releaseId: number) {
+    const { data: vinyl } = await firstValueFrom(
+      this.httpService.get(API_URL.release + releaseId).pipe(
+        catchError((error: AxiosError) => {
+          if (error.status == 404) {
+            throw new BadRequestException(VINYL_NOT_FOUND);
+          } else {
+            throw new Error(error.message);
+          }
+        }),
+      ),
     );
-    const vinyl = data;
 
     if (!vinyl) {
       throw new NotFoundException(VINYL_NOT_FOUND);
     }
 
+    const dto = await this.parseData(vinyl);
+
+    return dto;
+  }
+
+  private async parseData(vinyl) {
     const newFile = await this.fileService.saveFileByLink(vinyl.images[0].uri);
 
     const dto: VinylDto = {
@@ -120,7 +104,6 @@ export class DiscogsService {
       authorName: vinyl.artists_sort,
       price: randomInt(10),
     };
-
     return dto;
   }
 }

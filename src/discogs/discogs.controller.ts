@@ -20,15 +20,15 @@ export class DiscogsController {
     @Inject('DISCOGS_SERVICE') private readonly discogsService: DiscogsService,
   ) {}
 
-  @ApiOperation({ summary: 'find vinyl from discogs api' })
+  @ApiOperation({ summary: 'find vinyls from discogs api' })
   @ApiCookieAuth('access_token')
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe())
   @Get()
-  async findVinyl(
+  async findVinyls(
     @Query() queryDto: DiscogsQueryDto,
     @Query() pageOptionsDto: PageOptionsDto,
   ) {
-    return await this.discogsService.find(queryDto, pageOptionsDto);
+    return await this.discogsService.findVinyls(queryDto, pageOptionsDto);
   }
 }

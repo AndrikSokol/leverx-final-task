@@ -75,7 +75,7 @@ export class StripeService {
 
     const order = await this.orderService.getOrder(orderId);
 
-    const vinylsName = order.vinyls.map((vinyl) => vinyl.name).join(' ');
+    const vinylsName = order.vinyls.map((vinyl) => vinyl.name).join(', ');
 
     const emailData = {
       to: email,
