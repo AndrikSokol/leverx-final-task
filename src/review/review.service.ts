@@ -33,7 +33,7 @@ export class ReviewService {
       skip: pageOptionsDto.skip,
       take: pageOptionsDto.take,
       order: {
-        id: 'ASC',
+        id: pageOptionsDto.order,
       },
     });
 
@@ -60,7 +60,7 @@ export class ReviewService {
       skip: pageOptionsDto.skip,
       take: pageOptionsDto.take,
       order: {
-        id: 'ASC',
+        id: pageOptionsDto.order,
       },
     });
 
